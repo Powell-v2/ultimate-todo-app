@@ -4,7 +4,7 @@ import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { TasksService } from 'src/tasks/tasks.service';
-import { Task } from 'src/tasks/entities/task.model';
+import { Task } from 'src/tasks/entities/task.entity';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -24,7 +24,8 @@ export class UsersResolver {
 
   @Mutation(() => User)
   createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return this.usersService.create(createUserInput);
+    return createUserInput;
+    // return this.usersService.create(createUserInput);
   }
 
   @Mutation(() => User)

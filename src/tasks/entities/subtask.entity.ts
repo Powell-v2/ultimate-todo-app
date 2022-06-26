@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { EPriorities } from "./task.model";
+import { EPriorities } from "./task.entity";
 
 @ObjectType({ description: "subtask" })
 export class Subtask {

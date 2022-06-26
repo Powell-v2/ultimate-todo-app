@@ -11,7 +11,6 @@ input CreateTaskInput {
 
 input CreateUserInput {
   email: String!
-  id: String!
   name: String!
 }
 
@@ -52,13 +51,13 @@ type Task {
 
 input UpdateTaskInput {
   email: String
-  id: String
+  id: ID!
   name: String
 }
 
 input UpdateUserInput {
   email: String
-  id: String
+  id: ID!
   name: String
 }
 

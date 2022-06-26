@@ -1,5 +1,5 @@
 import { Directive, Field, ID, ObjectType } from "@nestjs/graphql";
-import { Subtask } from "./subtask.model";
+import { Subtask } from "./subtask.entity";
 
 export enum EPriorities {
   P1 = "P1",

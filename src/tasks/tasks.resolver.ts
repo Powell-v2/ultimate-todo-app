@@ -5,7 +5,7 @@ import { PubSub } from 'graphql-subscriptions'
 import { CreateTaskInput } from './dto/create-task.input'
 import { TasksArgs } from './dto/tasks.args';
 import { UpdateTaskInput } from './dto/update-task.input';
-import { Task } from './entities/task.model';
+import { Task } from './entities/task.entity';
 import { TasksService } from './tasks.service';
 
 const pubsub = new PubSub()
