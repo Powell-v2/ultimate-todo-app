@@ -1,14 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { NewTaskInput } from "./dto/new_task.input";
+import { NewTaskInput } from "./dto/create-task.input";
 import { TasksArgs } from "./dto/tasks.args";
-import { UpdateTaskInput } from "./dto/update_task.input";
+import { UpdateTaskInput } from "./dto/update-task.input";
 import { Task } from "./models/task.model";
 
 @Injectable()
 export class TasksService {
   private readonly tasks: Task[] = [];
 
-  async findAll(args: TasksArgs): Promise<Task[]> {
+  async findAll({ userId, args }: { userId?: string, args?: TasksArgs }): Promise<Task[]> {
     return this.tasks;
   }
 
@@ -20,7 +20,7 @@ export class TasksService {
     const augmented: Task = {
       ...input,
       id: String(Math.floor(1000 * Math.random())),
-      creationDate: new Date(),
+      createdAt: new Date(),
     }
     this.tasks.push(augmented)
     return augmented

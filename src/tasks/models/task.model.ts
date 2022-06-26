@@ -14,7 +14,7 @@ export class Task {
   id: string;
 
   @Field()
-  creationDate: Date;
+  createdAt: Date;
 
   // @Directive('@upper')
   @Field()

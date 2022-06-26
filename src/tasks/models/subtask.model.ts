@@ -7,7 +7,7 @@ export class Subtask {
   id: string;
 
   @Field()
-  creationDate: Date;
+  createdAt: Date;
 
   // @Directive('@upper')
   @Field()
