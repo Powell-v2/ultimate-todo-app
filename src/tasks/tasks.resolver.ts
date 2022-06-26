@@ -2,10 +2,10 @@ import { NotFoundException } from '@nestjs/common'
 import { Resolver, Query, Args, Mutation, Subscription } from '@nestjs/graphql'
 import { PubSub } from 'graphql-subscriptions'
 
-import { NewTaskInput } from './dto/create-task.input'
+import { CreateTaskInput } from './dto/create-task.input'
 import { TasksArgs } from './dto/tasks.args';
 import { UpdateTaskInput } from './dto/update-task.input';
-import { Task } from './models/task.model';
+import { Task } from './entities/task.model';
 import { TasksService } from './tasks.service';
 
 const pubsub = new PubSub()
@@ -32,7 +32,7 @@ export class TasksResolver {
 
   @Mutation(returns => Task)
   async addTask(
-    @Args('input') input: NewTaskInput
+    @Args('input') input: CreateTaskInput
   ): Promise<Task> {
     const newTask = await this.taskService.add(input)
 

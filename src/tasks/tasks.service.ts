@@ -1,8 +1,8 @@
 import { Injectable } from "@nestjs/common";
-import { NewTaskInput } from "./dto/create-task.input";
+import { CreateTaskInput } from "./dto/create-task.input";
 import { TasksArgs } from "./dto/tasks.args";
 import { UpdateTaskInput } from "./dto/update-task.input";
-import { Task } from "./models/task.model";
+import { Task } from "./entities/task.model";
 
 @Injectable()
 export class TasksService {
@@ -16,7 +16,7 @@ export class TasksService {
     return this.tasks.find((task) => task.id === id);
   }
 
-  async add(input: NewTaskInput): Promise<Task> {
+  async add(input: CreateTaskInput): Promise<Task> {
     const augmented: Task = {
       ...input,
       id: String(Math.floor(1000 * Math.random())),

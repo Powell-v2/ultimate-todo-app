@@ -1,20 +1,12 @@
-import { ObjectType, Field } from '@nestjs/graphql';
-import { Task } from 'src/tasks/models/task.model';
+import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { Task } from 'src/tasks/entities/task.model';
 
 @ObjectType()
 export class User {
-  @Field()
+  @Field(type => ID)
   id: string;
-
-  @Field()
   name: string;
-
-  @Field()
   email: string;
-
-  @Field()
   createdAt: Date;
-
-  @Field(type => [Task], { nullable: true })
-  tasks: Task[];
+  tasks?: Task[];
 }
