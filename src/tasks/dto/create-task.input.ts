@@ -1,15 +1,15 @@
 import { Field, InputType } from "@nestjs/graphql";
-import { IsNotEmpty, Length, MaxLength } from "class-validator";
-import { EPriorities } from "../entities/task.entity";
+import { IsNotEmpty, IsOptional, Length, MaxLength } from "class-validator";
+import { Priorities } from "../entities/task.entity";
 
 @InputType()
 export class CreateTaskInput {
-  @IsNotEmpty()
-  @MaxLength(50)
+  @Length(1, 50)
   title: string;
   @Length(1, 255)
+  @IsOptional()
   description?: string;
   dueDate?: Date;
-  @Field({ defaultValue: EPriorities.P4 })
-  priority?: EPriorities;
+  @Field({ defaultValue: Priorities.P4 })
+  priority?: Priorities;
 }

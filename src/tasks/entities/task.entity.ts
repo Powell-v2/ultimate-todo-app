@@ -1,12 +1,17 @@
-import { Directive, Field, ID, ObjectType } from "@nestjs/graphql";
-import { Subtask } from "./subtask.entity";
+import { Directive, Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 
-export enum EPriorities {
+export enum Priorities {
   P1 = "P1",
   P2 = "P2",
   P3 = "P3",
   P4 = "P4"
 }
+
+registerEnumType(Priorities, { name: 'Priorities', description: 'Task priority levels.', valuesMap: {
+  [Priorities.P4]: {
+    description: 'Default priority level.'
+  }
+} })
 
 @ObjectType({ description: "task" })
 export class Task {
@@ -16,12 +21,11 @@ export class Task {
   @Field()
   createdAt: Date;
 
-  // @Directive('@upper')
   @Field()
   title: string;
 
-  @Field()
-  priority?: EPriorities
+  @Field(type => Priorities)
+  priority?: Priorities
 
   // @Field(type => [Subtask], { nullable: true })
   // subtasks?: Subtask[]

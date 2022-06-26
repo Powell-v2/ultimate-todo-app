@@ -28,6 +28,16 @@ type Mutation {
   updateUser(updateUserInput: UpdateUserInput!): User!
 }
 
+"""Task priority levels."""
+enum Priorities {
+  P1
+  P2
+  P3
+
+  """Default priority level."""
+  P4
+}
+
 type Query {
   task(id: String!): Task!
   tasks(skip: Int = 0, take: Int = 25): [Task!]!
@@ -45,7 +55,7 @@ type Task {
   description: String
   dueDate: DateTime
   id: ID!
-  priority: String
+  priority: Priorities
   title: String!
 }
 
