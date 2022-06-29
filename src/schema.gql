@@ -20,12 +20,12 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 scalar DateTime
 
 type Mutation {
-  addTask(input: CreateTaskInput!): Task!
-  createUser(createUserInput: CreateUserInput!): User!
-  deleteTask(id: String!): Boolean!
+  addTask(data: CreateTaskInput!, userId: Int!): Task!
+  createUser(payload: CreateUserInput!): User!
+  deleteTask(id: Int!): Boolean!
   removeUser(id: Int!): User!
-  updateTask(input: UpdateTaskInput!): Task!
-  updateUser(updateUserInput: UpdateUserInput!): User!
+  updateTask(data: UpdateTaskInput!, id: Int!): Task!
+  updateUser(data: UpdateUserInput!, id: Int!): User!
 }
 
 """Task priority levels."""
@@ -39,7 +39,7 @@ enum Priorities {
 }
 
 type Query {
-  task(id: String!): Task!
+  task(id: Int!): Task!
   tasks(skip: Int = 0, take: Int = 25): [Task!]!
   user(id: Int!): User!
   users: [User!]!
@@ -57,17 +57,18 @@ type Task {
   id: ID!
   priority: Priorities
   title: String!
+  user: User!
 }
 
 input UpdateTaskInput {
-  email: String
-  id: ID!
-  name: String
+  description: String
+  dueDate: DateTime
+  priority: String = "P4"
+  title: String
 }
 
 input UpdateUserInput {
   email: String
-  id: ID!
   name: String
 }
 

@@ -5,6 +5,8 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { TasksService } from 'src/tasks/tasks.service';
 import { Task } from 'src/tasks/entities/task.entity';
+import { NotFoundException, ConflictException, Inject, forwardRef } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -19,24 +21,48 @@ export class UsersResolver {
   }
 
   @Query(() => User, { name: 'user' })
-  findOne(@Args('id', { type: () => Int }) id: number) {
-    return this.usersService.findOne(id);
+  async findOne(@Args('id') id: number) {
+    const user = await this.usersService.findOne(id)
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} doesn't exist.`)
+    }
+    return user
   }
 
   @Mutation(() => User)
-  createUser(@Args('createUserInput') createUserInput: CreateUserInput) {
-    return createUserInput;
-    // return this.usersService.create(createUserInput);
+  async createUser(@Args('payload') payload: CreateUserInput) {
+    let newUser: User
+    try {
+      newUser = await this.usersService.create(payload);
+    } catch (error) {
+      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+        if (error.code === "P2002") {
+          throw new ConflictException(`User with email ${payload.email} aleady exists.`)
+        }
+      }
+    }
+    return newUser
   }
 
   @Mutation(() => User)
-  updateUser(@Args('updateUserInput') updateUserInput: UpdateUserInput) {
-    return this.usersService.update(updateUserInput);
+  async updateUser(
+    @Args('id') id: number,
+    @Args('data') data: UpdateUserInput
+  ) {
+    const updatedUser = await this.usersService.update({ id, data })
+    if (!updatedUser) {
+      throw new NotFoundException(`User with ID ${id} doesn't exist.`)
+    }
+    return updatedUser
   }
 
   @Mutation(() => User)
-  removeUser(@Args('id', { type: () => Int }) id: number) {
-    return this.usersService.remove(id);
+  async removeUser(@Args('id') id: number) {
+    const removedSuccessfully = await this.usersService.remove(id)
+    if (!removedSuccessfully) {
+      throw new NotFoundException(`User with ID ${id} doesn't exist.`)
+    }
+    return removedSuccessfully
   }
 
   @ResolveField('tasks', () => [Task])

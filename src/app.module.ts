@@ -17,10 +17,13 @@ import { UsersModule } from './users/users.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), "src/schema.gql"),
       sortSchema: true,
+      buildSchemaOptions: {
+        numberScalarMode: 'integer',
+      }
     }),
     UsersModule,
     TasksModule,
-  ],
+  ]
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

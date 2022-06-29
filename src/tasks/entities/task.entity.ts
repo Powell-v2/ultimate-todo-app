@@ -1,4 +1,5 @@
 import { Directive, Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { User } from "src/users/entities/user.entity";
 
 export enum Priorities {
   P1 = "P1",
@@ -7,16 +8,18 @@ export enum Priorities {
   P4 = "P4"
 }
 
-registerEnumType(Priorities, { name: 'Priorities', description: 'Task priority levels.', valuesMap: {
-  [Priorities.P4]: {
-    description: 'Default priority level.'
+registerEnumType(Priorities, {
+  name: 'Priorities', description: 'Task priority levels.', valuesMap: {
+    [Priorities.P4]: {
+      description: 'Default priority level.'
+    }
   }
-} })
+})
 
 @ObjectType({ description: "task" })
 export class Task {
   @Field((type) => ID)
-  id: string;
+  id: number;
 
   @Field()
   createdAt: Date;
@@ -24,11 +27,11 @@ export class Task {
   @Field()
   title: string;
 
+  @Field(type => User)
+  user: User
+
   @Field(type => Priorities)
   priority?: Priorities
-
-  // @Field(type => [Subtask], { nullable: true })
-  // subtasks?: Subtask[]
 
   @Field({ nullable: true })
   description?: string;
