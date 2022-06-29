@@ -12,6 +12,7 @@ export class UsersResolver {
     private readonly usersService: UsersService,
     private readonly tasksService: TasksService,
   ) { }
+
   @Query(() => [User], { name: 'users' })
   findAll() {
     return this.usersService.findAll();
