@@ -1,4 +1,4 @@
-import { Directive, Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Field, ID, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { User } from "src/users/entities/user.entity";
 
 export enum Priorities {
@@ -19,24 +19,23 @@ registerEnumType(Priorities, {
 @ObjectType({ description: "task" })
 export class Task {
   @Field((type) => ID)
-  id: number;
+  id: number
 
   @Field()
-  createdAt: Date;
+  createdAt: Date
 
-  @Field()
-  title: string;
+  title: string
 
   @Field(type => User)
   user: User
 
+  userId: number
+
   @Field(type => Priorities)
   priority?: Priorities
 
-  @Field({ nullable: true })
-  description?: string;
+  description?: string
 
-  @Field({ nullable: true })
-  dueDate?: Date;
+  dueDate?: Date
 }
 

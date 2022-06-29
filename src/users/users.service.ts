@@ -7,8 +7,8 @@ import { UpdateUserInput } from './dto/update-user.input';
 export class UsersService {
   constructor(private prisma: PrismaService) { }
 
-  findAll() {
-    return this.prisma.user.findMany();
+  findAll(args: Prisma.UserFindManyArgs) {
+    return this.prisma.user.findMany(args);
   }
 
   findOne(id: number) {

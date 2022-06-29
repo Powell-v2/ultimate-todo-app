@@ -5,8 +5,9 @@ import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { TasksService } from 'src/tasks/tasks.service';
 import { Task } from 'src/tasks/entities/task.entity';
-import { NotFoundException, ConflictException, Inject, forwardRef } from '@nestjs/common';
+import { NotFoundException, ConflictException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { FindManyUserArgs } from 'src/@generated/user/find-many-user.args';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -16,8 +17,8 @@ export class UsersResolver {
   ) { }
 
   @Query(() => [User], { name: 'users' })
-  findAll() {
-    return this.usersService.findAll();
+  findAll(@Args() args: FindManyUserArgs) {
+    return this.usersService.findAll(args);
   }
 
   @Query(() => User, { name: 'user' })
@@ -67,6 +68,12 @@ export class UsersResolver {
 
   @ResolveField('tasks', () => [Task])
   getTasks(@Parent() user: User) {
-    return this.tasksService.findAll({ userId: user.id })
+    return this.tasksService.findAll({
+      where: {
+        userId: {
+          equals: user.id
+        }
+      }
+    })
   }
 }

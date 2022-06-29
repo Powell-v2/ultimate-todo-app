@@ -1,22 +1,16 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
+import { FindManyTaskArgs } from "src/@generated/task/find-many-task.args";
 import { PrismaService } from "src/prisma.service";
 import { CreateTaskInput } from "./dto/create-task.input";
-import { TasksArgs } from "./dto/tasks.args";
-import { UpdateTaskInput } from "./dto/update-task.input";
 import { Priorities } from "./entities/task.entity";
 
 @Injectable()
 export class TasksService {
   constructor(private prisma: PrismaService) { }
 
-  async findAll({ userId, args }: { userId?: number, args?: TasksArgs }) {
-    return this.prisma.task.findMany({
-      where: {
-        userId
-      },
-      ...args
-    })
+  async findAll(args: FindManyTaskArgs) {
+    return this.prisma.task.findMany(args)
   }
 
   async findOne(id: number) {

@@ -1,11 +1,11 @@
-import { forwardRef, Inject, NotFoundException, ParseIntPipe } from '@nestjs/common'
+import { NotFoundException, ParseIntPipe } from '@nestjs/common'
 import { Resolver, Query, Args, Mutation, Subscription, Int, ResolveField, Parent } from '@nestjs/graphql'
 import { PubSub } from 'graphql-subscriptions'
+import { FindManyTaskArgs } from 'src/@generated/task/find-many-task.args'
 import { User } from 'src/users/entities/user.entity'
 import { UsersService } from 'src/users/users.service'
 
 import { CreateTaskInput } from './dto/create-task.input'
-import { TasksArgs } from './dto/tasks.args'
 import { UpdateTaskInput } from './dto/update-task.input'
 import { Task } from './entities/task.entity'
 import { TasksService } from './tasks.service'
@@ -29,13 +29,13 @@ export class TasksResolver {
   }
 
   @Query(() => [Task])
-  tasks(@Args() args: TasksArgs) {
-    return this.tasksService.findAll({ args })
+  tasks(@Args() args: FindManyTaskArgs) {
+    return this.tasksService.findAll(args)
   }
 
   @ResolveField('user', () => User)
   getTaskOwner(@Parent() task: Task) {
-    return this.usersService.findOne(task.user.id)
+    return this.usersService.findOne(task.userId)
   }
 
   @Mutation(() => Task)
