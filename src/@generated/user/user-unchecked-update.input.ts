@@ -15,6 +15,9 @@ export class UserUncheckedUpdateInput {
     email?: StringFieldUpdateOperationsInput;
 
     @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
+    password?: StringFieldUpdateOperationsInput;
+
+    @Field(() => StringFieldUpdateOperationsInput, {nullable:true})
     name?: StringFieldUpdateOperationsInput;
 
     @Field(() => TaskUncheckedUpdateManyWithoutUserInput, {nullable:true})
@@ -22,4 +25,7 @@ export class UserUncheckedUpdateInput {
 
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: DateTimeFieldUpdateOperationsInput;
+
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: DateTimeFieldUpdateOperationsInput;
 }

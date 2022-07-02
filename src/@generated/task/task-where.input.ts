@@ -37,6 +37,9 @@ export class TaskWhereInput {
     @Field(() => DateTimeFilter, {nullable:true})
     createdAt?: DateTimeFilter;
 
+    @Field(() => DateTimeFilter, {nullable:true})
+    updatedAt?: DateTimeFilter;
+
     @Field(() => UserRelationFilter, {nullable:true})
     user?: UserRelationFilter;
 

@@ -24,6 +24,9 @@ export class TaskCountAggregate {
     createdAt!: number;
 
     @Field(() => Int, {nullable:false})
+    updatedAt!: number;
+
+    @Field(() => Int, {nullable:false})
     userId!: number;
 
     @Field(() => Int, {nullable:false})

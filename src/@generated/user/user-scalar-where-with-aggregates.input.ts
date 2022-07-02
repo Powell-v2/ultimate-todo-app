@@ -23,8 +23,14 @@ export class UserScalarWhereWithAggregatesInput {
     email?: StringWithAggregatesFilter;
 
     @Field(() => StringWithAggregatesFilter, {nullable:true})
+    password?: StringWithAggregatesFilter;
+
+    @Field(() => StringWithAggregatesFilter, {nullable:true})
     name?: StringWithAggregatesFilter;
 
     @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
     createdAt?: DateTimeWithAggregatesFilter;
+
+    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    updatedAt?: DateTimeWithAggregatesFilter;
 }

@@ -7,6 +7,7 @@ export enum TaskScalarFieldEnum {
     priority = "priority",
     dueDate = "dueDate",
     createdAt = "createdAt",
+    updatedAt = "updatedAt",
     userId = "userId"
 }
 

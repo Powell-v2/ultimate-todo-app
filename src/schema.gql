@@ -12,6 +12,7 @@ input CreateTaskInput {
 input CreateUserInput {
   email: String!
   name: String!
+  password: String!
 }
 
 """
@@ -56,6 +57,8 @@ type Mutation {
   addTask(data: CreateTaskInput!, userId: Int!): Task!
   createUser(payload: CreateUserInput!): User!
   deleteTask(id: Int!): Boolean!
+  login(email: String!, password: String!): User!
+  logout: Boolean!
   removeUser(id: Int!): User!
   updateTask(data: UpdateTaskInput!, id: Int!): Task!
   updateUser(data: UpdateUserInput!, id: Int!): User!
@@ -212,6 +215,7 @@ input TaskOrderByWithRelationInput {
   id: SortOrder
   priority: SortOrder
   title: SortOrder
+  updatedAt: SortOrder
   user: UserOrderByWithRelationInput
   userId: SortOrder
 }
@@ -223,6 +227,7 @@ enum TaskScalarFieldEnum {
   id
   priority
   title
+  updatedAt
   userId
 }
 
@@ -236,6 +241,7 @@ input TaskWhereInput {
   id: IntFilter
   priority: StringFilter
   title: StringFilter
+  updatedAt: DateTimeFilter
   user: UserRelationFilter
   userId: IntFilter
 }
@@ -269,7 +275,9 @@ input UserOrderByWithRelationInput {
   email: SortOrder
   id: SortOrder
   name: SortOrder
+  password: SortOrder
   tasks: TaskOrderByRelationAggregateInput
+  updatedAt: SortOrder
 }
 
 input UserRelationFilter {
@@ -282,6 +290,8 @@ enum UserScalarFieldEnum {
   email
   id
   name
+  password
+  updatedAt
 }
 
 input UserWhereInput {
@@ -292,7 +302,9 @@ input UserWhereInput {
   email: StringFilter
   id: IntFilter
   name: StringFilter
+  password: StringFilter
   tasks: TaskListRelationFilter
+  updatedAt: DateTimeFilter
 }
 
 input UserWhereUniqueInput {

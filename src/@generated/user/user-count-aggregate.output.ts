@@ -12,10 +12,16 @@ export class UserCountAggregate {
     email!: number;
 
     @Field(() => Int, {nullable:false})
+    password!: number;
+
+    @Field(() => Int, {nullable:false})
     name!: number;
 
     @Field(() => Int, {nullable:false})
     createdAt!: number;
+
+    @Field(() => Int, {nullable:false})
+    updatedAt!: number;
 
     @Field(() => Int, {nullable:false})
     _all!: number;

@@ -29,6 +29,9 @@ export class TaskOrderByWithAggregationInput {
     createdAt?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
+    updatedAt?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
     userId?: keyof typeof SortOrder;
 
     @Field(() => TaskCountOrderByAggregateInput, {nullable:true})

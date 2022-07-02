@@ -24,6 +24,9 @@ export class TaskOrderByWithRelationInput {
     @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
 
+    @Field(() => SortOrder, {nullable:true})
+    updatedAt?: keyof typeof SortOrder;
+
     @Field(() => UserOrderByWithRelationInput, {nullable:true})
     user?: UserOrderByWithRelationInput;
 

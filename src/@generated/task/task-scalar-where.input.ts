@@ -36,6 +36,9 @@ export class TaskScalarWhereInput {
     @Field(() => DateTimeFilter, {nullable:true})
     createdAt?: DateTimeFilter;
 
+    @Field(() => DateTimeFilter, {nullable:true})
+    updatedAt?: DateTimeFilter;
+
     @Field(() => IntFilter, {nullable:true})
     userId?: IntFilter;
 }

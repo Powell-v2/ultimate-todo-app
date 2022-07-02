@@ -23,6 +23,9 @@ export class TaskMaxAggregate {
     @Field(() => Date, {nullable:true})
     createdAt?: Date | string;
 
+    @Field(() => Date, {nullable:true})
+    updatedAt?: Date | string;
+
     @Field(() => Int, {nullable:true})
     userId?: number;
 }

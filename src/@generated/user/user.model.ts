@@ -13,6 +13,9 @@ export class User {
     @Field(() => String, {nullable:false})
     email!: string;
 
+    @Field(() => String, {nullable:false,defaultValue:''})
+    password!: string;
+
     @Field(() => String, {nullable:false})
     name!: string;
 
@@ -21,6 +24,9 @@ export class User {
 
     @Field(() => Date, {nullable:false})
     createdAt!: Date;
+
+    @Field(() => Date, {nullable:false})
+    updatedAt!: Date;
 
     @Field(() => UserCount, {nullable:false})
     _count?: UserCount;

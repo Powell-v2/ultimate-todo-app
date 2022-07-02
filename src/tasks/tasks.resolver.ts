@@ -35,7 +35,7 @@ export class TasksResolver {
 
   @ResolveField('user', () => User)
   getTaskOwner(@Parent() task: Task) {
-    return this.usersService.findOne(task.userId)
+    return this.usersService.findOneById(task.userId)
   }
 
   @Mutation(() => Task)

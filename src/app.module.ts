@@ -10,6 +10,7 @@ import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { join } from "path";
 import { TasksModule } from "./tasks/tasks.module";
 import { UsersModule } from './users/users.module';
+import { AuthenticationModule } from './authentication/authentication.module';
 
 @Module({
   imports: [
@@ -19,11 +20,17 @@ import { UsersModule } from './users/users.module';
       sortSchema: true,
       buildSchemaOptions: {
         numberScalarMode: 'integer',
+      },
+      context: ({ req, res }) => ({ request: req, response: res }),
+      cors: {
+        credentials: true,
+        origin: true,
       }
     }),
     UsersModule,
     TasksModule,
-  ]
+    AuthenticationModule,
+  ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {

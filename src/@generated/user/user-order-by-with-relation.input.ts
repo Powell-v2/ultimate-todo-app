@@ -13,6 +13,9 @@ export class UserOrderByWithRelationInput {
     email?: keyof typeof SortOrder;
 
     @Field(() => SortOrder, {nullable:true})
+    password?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
     name?: keyof typeof SortOrder;
 
     @Field(() => TaskOrderByRelationAggregateInput, {nullable:true})
@@ -20,4 +23,7 @@ export class UserOrderByWithRelationInput {
 
     @Field(() => SortOrder, {nullable:true})
     createdAt?: keyof typeof SortOrder;
+
+    @Field(() => SortOrder, {nullable:true})
+    updatedAt?: keyof typeof SortOrder;
 }

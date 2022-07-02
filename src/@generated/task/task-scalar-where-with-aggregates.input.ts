@@ -36,6 +36,9 @@ export class TaskScalarWhereWithAggregatesInput {
     @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
     createdAt?: DateTimeWithAggregatesFilter;
 
+    @Field(() => DateTimeWithAggregatesFilter, {nullable:true})
+    updatedAt?: DateTimeWithAggregatesFilter;
+
     @Field(() => IntWithAggregatesFilter, {nullable:true})
     userId?: IntWithAggregatesFilter;
 }

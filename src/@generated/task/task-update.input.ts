@@ -24,6 +24,9 @@ export class TaskUpdateInput {
     @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
     createdAt?: DateTimeFieldUpdateOperationsInput;
 
+    @Field(() => DateTimeFieldUpdateOperationsInput, {nullable:true})
+    updatedAt?: DateTimeFieldUpdateOperationsInput;
+
     @Field(() => UserUpdateOneRequiredWithoutTasksInput, {nullable:true})
     user?: UserUpdateOneRequiredWithoutTasksInput;
 }

@@ -1,19 +1,27 @@
-import { Resolver, Query, Mutation, Args, Int, ResolveField, Parent } from '@nestjs/graphql';
+import * as bcrypt from 'bcrypt'
+import { NotFoundException, ConflictException, InternalServerErrorException, UseGuards, Request, UseInterceptors } from '@nestjs/common';
+import { Resolver, Query, Mutation, Args, ResolveField, Parent, Context, GraphQLExecutionContext } from '@nestjs/graphql';
+import { Prisma } from '@prisma/client';
+
+import { TasksService } from 'src/tasks/tasks.service';
+import { Task } from 'src/tasks/entities/task.entity';
+import { FindManyUserArgs } from 'src/@generated/user/find-many-user.args';
+
 import { UsersService } from './users.service';
 import { User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
-import { TasksService } from 'src/tasks/tasks.service';
-import { Task } from 'src/tasks/entities/task.entity';
-import { NotFoundException, ConflictException } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { FindManyUserArgs } from 'src/@generated/user/find-many-user.args';
+import { AuthenticationService } from 'src/authentication/authentication.service';
+import { Response } from 'express';
+import { Public } from 'src/common/decorators/public.decorator';
+import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 
 @Resolver(of => User)
 export class UsersResolver {
   constructor(
     private readonly usersService: UsersService,
     private readonly tasksService: TasksService,
+    private readonly authenticationService: AuthenticationService,
   ) { }
 
   @Query(() => [User], { name: 'users' })
@@ -22,25 +30,50 @@ export class UsersResolver {
   }
 
   @Query(() => User, { name: 'user' })
-  async findOne(@Args('id') id: number) {
-    const user = await this.usersService.findOne(id)
+  async findOne(@Args('id') id: number, @CurrentUser() currentUser) {
+    const user = await this.usersService.findOneById(id)
     if (!user) {
       throw new NotFoundException(`User with ID ${id} doesn't exist.`)
     }
     return user
   }
 
+  @Public()
+  @Mutation(() => User)
+  async login(
+    @Args('email') email: string,
+    @Args('password') password: string,
+    @Context() context: { response: Response }
+  ) {
+    const user = await this.authenticationService.validateUser(email, password)
+    const jwtCookie = this.authenticationService.getJwtCookie(user)
+    context.response.setHeader('Set-Cookie', jwtCookie)
+    return user
+  }
+
+  @Mutation(() => Boolean)
+  async logout(
+    @Context() context: { response: Response }
+  ) {
+    const logoutCookie = this.authenticationService.getLogoutCookie()
+    context.response.setHeader('Set-Cookie', logoutCookie)
+    return true
+  }
+
   @Mutation(() => User)
   async createUser(@Args('payload') payload: CreateUserInput) {
-    let newUser: User
+    let newUser
+    const hashedPassword = await bcrypt.hash(payload.password, 10)
     try {
-      newUser = await this.usersService.create(payload);
+      const { password, ...rest } = await this.usersService.create({ ...payload, password: hashedPassword })
+      newUser = rest
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
         if (error.code === "P2002") {
           throw new ConflictException(`User with email ${payload.email} aleady exists.`)
         }
       }
+      throw new InternalServerErrorException(error, 'Something went wrong');
     }
     return newUser
   }

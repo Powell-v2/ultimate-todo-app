@@ -7,4 +7,5 @@ export class CreateUserInput {
   name: string;
   @IsEmail()
   email: string;
+  password: string
 }

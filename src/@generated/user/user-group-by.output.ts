@@ -17,10 +17,16 @@ export class UserGroupBy {
     email!: string;
 
     @Field(() => String, {nullable:false})
+    password!: string;
+
+    @Field(() => String, {nullable:false})
     name!: string;
 
     @Field(() => Date, {nullable:false})
     createdAt!: Date | string;
+
+    @Field(() => Date, {nullable:false})
+    updatedAt!: Date | string;
 
     @Field(() => UserCountAggregate, {nullable:true})
     _count?: UserCountAggregate;

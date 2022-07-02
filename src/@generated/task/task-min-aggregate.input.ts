@@ -23,5 +23,8 @@ export class TaskMinAggregateInput {
     createdAt?: true;
 
     @Field(() => Boolean, {nullable:true})
+    updatedAt?: true;
+
+    @Field(() => Boolean, {nullable:true})
     userId?: true;
 }

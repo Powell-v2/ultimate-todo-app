@@ -24,6 +24,9 @@ export class UserWhereInput {
     email?: StringFilter;
 
     @Field(() => StringFilter, {nullable:true})
+    password?: StringFilter;
+
+    @Field(() => StringFilter, {nullable:true})
     name?: StringFilter;
 
     @Field(() => TaskListRelationFilter, {nullable:true})
@@ -31,4 +34,7 @@ export class UserWhereInput {
 
     @Field(() => DateTimeFilter, {nullable:true})
     createdAt?: DateTimeFilter;
+
+    @Field(() => DateTimeFilter, {nullable:true})
+    updatedAt?: DateTimeFilter;
 }

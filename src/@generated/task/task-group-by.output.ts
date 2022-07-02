@@ -28,6 +28,9 @@ export class TaskGroupBy {
     @Field(() => Date, {nullable:false})
     createdAt!: Date | string;
 
+    @Field(() => Date, {nullable:false})
+    updatedAt!: Date | string;
+
     @Field(() => Int, {nullable:false})
     userId!: number;
 
