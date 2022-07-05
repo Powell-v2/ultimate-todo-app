@@ -11,6 +11,7 @@ import { join } from "path";
 import { TasksModule } from "./tasks/tasks.module";
 import { UsersModule } from './users/users.module';
 import { AuthenticationModule } from './authentication/authentication.module';
+import { SubtasksModule } from './subtasks/subtasks.module';
 
 @Module({
   imports: [
@@ -30,13 +31,14 @@ import { AuthenticationModule } from './authentication/authentication.module';
     UsersModule,
     TasksModule,
     AuthenticationModule,
+    SubtasksModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer.apply(LoggerMiddleWare).forRoutes({
       path: "*",
-      method: RequestMethod.GET,
+      method: RequestMethod.HEAD,
     });
   }
 }

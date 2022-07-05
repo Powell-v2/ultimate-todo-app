@@ -80,6 +80,7 @@ export class UsersResolver {
     return true
   }
 
+  @Public()
   @Mutation(() => User)
   async createUser(@Args('payload') payload: CreateUserInput) {
     let newUser

@@ -3,6 +3,8 @@ import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
 import { User } from '../user/user.model';
 import { Int } from '@nestjs/graphql';
+import { Subtask } from '../subtask/subtask.model';
+import { TaskCount } from './task-count.output';
 
 @ObjectType()
 export class Task {
@@ -33,4 +35,10 @@ export class Task {
 
     @Field(() => Int, {nullable:false})
     userId!: number;
+
+    @Field(() => [Subtask], {nullable:true})
+    subtasks?: Array<Subtask>;
+
+    @Field(() => TaskCount, {nullable:false})
+    _count?: TaskCount;
 }

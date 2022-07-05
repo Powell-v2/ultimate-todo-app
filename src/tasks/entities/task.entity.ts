@@ -1,4 +1,5 @@
-import { Field, ID, Int, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Subtask } from "src/subtasks/entities/subtask.entity";
 import { User } from "src/users/entities/user.entity";
 
 export enum Priorities {
@@ -21,21 +22,21 @@ export class Task {
   @Field((type) => ID)
   id: number
 
-  @Field()
-  createdAt: Date
-
   title: string
 
   @Field(type => User)
   user: User
 
-  userId: number
-
   @Field(type => Priorities)
   priority?: Priorities
+
+  @Field(type => [Subtask], { nullable: true })
+  subtasks?: Subtask[]
 
   description?: string
 
   dueDate?: Date
+
+  createdAt: Date
 }
 

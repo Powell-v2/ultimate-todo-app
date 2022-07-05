@@ -1,14 +1,17 @@
 import { NotFoundException, ParseIntPipe } from '@nestjs/common'
 import { Resolver, Query, Args, Mutation, Subscription, Int, ResolveField, Parent } from '@nestjs/graphql'
 import { PubSub } from 'graphql-subscriptions'
+import { Task as TTask } from "@prisma/client"
+
 import { FindManyTaskArgs } from 'src/@generated/task/find-many-task.args'
 import { User } from 'src/users/entities/user.entity'
 import { UsersService } from 'src/users/users.service'
-
 import { CreateTaskInput } from './dto/create-task.input'
 import { UpdateTaskInput } from './dto/update-task.input'
 import { Task } from './entities/task.entity'
 import { TasksService } from './tasks.service'
+import { SubtasksService } from 'src/subtasks/subtasks.service'
+import { Subtask } from 'src/subtasks/entities/subtask.entity'
 
 const pubsub = new PubSub()
 
@@ -17,6 +20,7 @@ export class TasksResolver {
   constructor(
     private readonly tasksService: TasksService,
     private readonly usersService: UsersService,
+    private readonly subtasksService: SubtasksService,
   ) { }
 
   @Query(() => Task)
@@ -34,8 +38,17 @@ export class TasksResolver {
   }
 
   @ResolveField('user', () => User)
-  getTaskOwner(@Parent() task: Task) {
+  getTaskOwner(@Parent() task: TTask) {
     return this.usersService.findOneById(task.userId)
+  }
+
+  @ResolveField('subtasks', () => [Subtask])
+  getSubtasks(@Parent() task: TTask) {
+    return this.subtasksService.findAll({
+      where: {
+        taskId: { equals: task.id }
+      }
+    })
   }
 
   @Mutation(() => Task)

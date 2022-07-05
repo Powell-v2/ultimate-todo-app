@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
+import { SubtaskUncheckedCreateNestedManyWithoutTaskInput } from '../subtask/subtask-unchecked-create-nested-many-without-task.input';
 
 @InputType()
 export class TaskUncheckedCreateWithoutUserInput {
@@ -25,4 +26,7 @@ export class TaskUncheckedCreateWithoutUserInput {
 
     @Field(() => Date, {nullable:true})
     updatedAt?: Date | string;
+
+    @Field(() => SubtaskUncheckedCreateNestedManyWithoutTaskInput, {nullable:true})
+    subtasks?: SubtaskUncheckedCreateNestedManyWithoutTaskInput;
 }

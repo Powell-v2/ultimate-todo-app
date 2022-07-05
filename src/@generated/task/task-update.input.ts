@@ -5,6 +5,7 @@ import { NullableStringFieldUpdateOperationsInput } from '../prisma/nullable-str
 import { NullableDateTimeFieldUpdateOperationsInput } from '../prisma/nullable-date-time-field-update-operations.input';
 import { DateTimeFieldUpdateOperationsInput } from '../prisma/date-time-field-update-operations.input';
 import { UserUpdateOneRequiredWithoutTasksInput } from '../user/user-update-one-required-without-tasks.input';
+import { SubtaskUpdateManyWithoutTaskInput } from '../subtask/subtask-update-many-without-task.input';
 
 @InputType()
 export class TaskUpdateInput {
@@ -29,4 +30,7 @@ export class TaskUpdateInput {
 
     @Field(() => UserUpdateOneRequiredWithoutTasksInput, {nullable:true})
     user?: UserUpdateOneRequiredWithoutTasksInput;
+
+    @Field(() => SubtaskUpdateManyWithoutTaskInput, {nullable:true})
+    subtasks?: SubtaskUpdateManyWithoutTaskInput;
 }

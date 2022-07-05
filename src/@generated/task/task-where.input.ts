@@ -6,6 +6,7 @@ import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
 import { DateTimeNullableFilter } from '../prisma/date-time-nullable-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
 import { UserRelationFilter } from '../user/user-relation-filter.input';
+import { SubtaskListRelationFilter } from '../subtask/subtask-list-relation-filter.input';
 
 @InputType()
 export class TaskWhereInput {
@@ -45,4 +46,7 @@ export class TaskWhereInput {
 
     @Field(() => IntFilter, {nullable:true})
     userId?: IntFilter;
+
+    @Field(() => SubtaskListRelationFilter, {nullable:true})
+    subtasks?: SubtaskListRelationFilter;
 }

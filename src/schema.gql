@@ -2,6 +2,13 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input CreateSubtaskInput {
+  description: String
+  dueDate: DateTime
+  priority: String = "P4"
+  title: String!
+}
+
 input CreateTaskInput {
   description: String
   dueDate: DateTime
@@ -54,13 +61,16 @@ input IntFilter {
 }
 
 type Mutation {
+  addSubtask(data: CreateSubtaskInput!, taskId: Int!): Subtask!
   addTask(data: CreateTaskInput!, userId: Int!): Task!
   createUser(payload: CreateUserInput!): User!
+  deleteSubtask(id: Int!): Boolean!
   deleteTask(id: Int!): Boolean!
   login(email: String!, password: String!): User!
   logout: Boolean!
   refreshToken: Boolean!
   removeUser(id: Int!): User!
+  updateSubtask(data: UpdateSubaskInput!, id: Int!): Subtask!
   updateTask(data: UpdateTaskInput!, id: Int!): Task!
   updateUser(data: UpdateUserInput!, id: Int!): User!
 }
@@ -187,6 +197,41 @@ type Subscription {
   taskAdded: Task!
 }
 
+"""subtask"""
+type Subtask {
+  createdAt: DateTime!
+  description: String
+  dueDate: DateTime
+  id: ID!
+  priority: Priorities
+  title: String!
+}
+
+input SubtaskListRelationFilter {
+  every: SubtaskWhereInput
+  none: SubtaskWhereInput
+  some: SubtaskWhereInput
+}
+
+input SubtaskOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input SubtaskWhereInput {
+  AND: [SubtaskWhereInput!]
+  NOT: [SubtaskWhereInput!]
+  OR: [SubtaskWhereInput!]
+  createdAt: DateTimeFilter
+  description: StringNullableFilter
+  dueDate: DateTimeNullableFilter
+  id: IntFilter
+  priority: StringFilter
+  task: TaskRelationFilter
+  taskId: IntFilter
+  title: StringFilter
+  updatedAt: DateTimeFilter
+}
+
 """task"""
 type Task {
   createdAt: DateTime!
@@ -194,9 +239,9 @@ type Task {
   dueDate: DateTime
   id: ID!
   priority: Priorities
+  subtasks: [Subtask!]!
   title: String!
   user: User!
-  userId: Int!
 }
 
 input TaskListRelationFilter {
@@ -215,10 +260,16 @@ input TaskOrderByWithRelationInput {
   dueDate: SortOrder
   id: SortOrder
   priority: SortOrder
+  subtasks: SubtaskOrderByRelationAggregateInput
   title: SortOrder
   updatedAt: SortOrder
   user: UserOrderByWithRelationInput
   userId: SortOrder
+}
+
+input TaskRelationFilter {
+  is: TaskWhereInput
+  isNot: TaskWhereInput
 }
 
 enum TaskScalarFieldEnum {
@@ -241,6 +292,7 @@ input TaskWhereInput {
   dueDate: DateTimeNullableFilter
   id: IntFilter
   priority: StringFilter
+  subtasks: SubtaskListRelationFilter
   title: StringFilter
   updatedAt: DateTimeFilter
   user: UserRelationFilter
@@ -249,6 +301,13 @@ input TaskWhereInput {
 
 input TaskWhereUniqueInput {
   id: Int
+}
+
+input UpdateSubaskInput {
+  description: String
+  dueDate: DateTime
+  priority: String = "P4"
+  title: String
 }
 
 input UpdateTaskInput {
