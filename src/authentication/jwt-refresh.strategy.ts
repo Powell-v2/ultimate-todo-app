@@ -8,19 +8,21 @@ import * as jwtConstants from '../common/constants/jwt';
 import { ITokenPayload } from "./tokenPayload.interface";
 
 @Injectable()
-export class JwtStrategy extends PassportStrategy(Strategy) {
+export class JwtRefreshStrategy extends PassportStrategy(Strategy, 'jwt-refresh') {
   constructor(
     private readonly usersService: UsersService
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromExtractors([
-        (request: Request) => request?.cookies?.JWT
+        (request: Request) => request?.cookies?.JWT_REFRESH
       ]),
-      secretOrKey: jwtConstants.SECRET,
+      secretOrKey: jwtConstants.REFRESH_SECRET,
+      passReqToCallback: true,
     })
   }
 
-  async validate(payload: ITokenPayload) {
-    return this.usersService.findOneById(payload.userId)
+  async validate(request: Request, payload: ITokenPayload) {
+    const refreshToken = request?.cookies?.JWT_REFRESH
+    return this.usersService.findOneByRefreshToken(refreshToken, payload.userId)
   }
 }

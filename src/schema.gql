@@ -59,6 +59,7 @@ type Mutation {
   deleteTask(id: Int!): Boolean!
   login(email: String!, password: String!): User!
   logout: Boolean!
+  refreshToken: Boolean!
   removeUser(id: Int!): User!
   updateTask(data: UpdateTaskInput!, id: Int!): Task!
   updateUser(data: UpdateUserInput!, id: Int!): User!
@@ -276,6 +277,7 @@ input UserOrderByWithRelationInput {
   id: SortOrder
   name: SortOrder
   password: SortOrder
+  refreshToken: SortOrder
   tasks: TaskOrderByRelationAggregateInput
   updatedAt: SortOrder
 }
@@ -291,6 +293,7 @@ enum UserScalarFieldEnum {
   id
   name
   password
+  refreshToken
   updatedAt
 }
 
@@ -303,6 +306,7 @@ input UserWhereInput {
   id: IntFilter
   name: StringFilter
   password: StringFilter
+  refreshToken: StringNullableFilter
   tasks: TaskListRelationFilter
   updatedAt: DateTimeFilter
 }

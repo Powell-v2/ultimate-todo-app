@@ -13,8 +13,11 @@ export class User {
     @Field(() => String, {nullable:false})
     email!: string;
 
-    @Field(() => String, {nullable:false,defaultValue:''})
+    @Field(() => String, {nullable:false})
     password!: string;
+
+    @Field(() => String, {nullable:true})
+    refreshToken!: string | null;
 
     @Field(() => String, {nullable:false})
     name!: string;

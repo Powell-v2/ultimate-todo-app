@@ -7,8 +7,11 @@ export class UserCreateWithoutTasksInput {
     @Field(() => String, {nullable:false})
     email!: string;
 
+    @Field(() => String, {nullable:false})
+    password!: string;
+
     @Field(() => String, {nullable:true})
-    password?: string;
+    refreshToken?: string;
 
     @Field(() => String, {nullable:false})
     name!: string;

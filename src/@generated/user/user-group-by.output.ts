@@ -19,6 +19,9 @@ export class UserGroupBy {
     @Field(() => String, {nullable:false})
     password!: string;
 
+    @Field(() => String, {nullable:true})
+    refreshToken?: string;
+
     @Field(() => String, {nullable:false})
     name!: string;
 

@@ -1,8 +1,7 @@
 import * as bcrypt from 'bcrypt'
-import { NotFoundException, ConflictException, InternalServerErrorException, UseGuards, Request, UseInterceptors } from '@nestjs/common';
-import { Resolver, Query, Mutation, Args, ResolveField, Parent, Context, GraphQLExecutionContext } from '@nestjs/graphql';
-import { Prisma } from '@prisma/client';
-
+import { NotFoundException, ConflictException, InternalServerErrorException, UseGuards } from '@nestjs/common';
+import { Resolver, Query, Mutation, Args, ResolveField, Parent, Context } from '@nestjs/graphql';
+import { Prisma, User as TUser } from '@prisma/client';
 import { TasksService } from 'src/tasks/tasks.service';
 import { Task } from 'src/tasks/entities/task.entity';
 import { FindManyUserArgs } from 'src/@generated/user/find-many-user.args';
@@ -15,6 +14,7 @@ import { AuthenticationService } from 'src/authentication/authentication.service
 import { Response } from 'express';
 import { Public } from 'src/common/decorators/public.decorator';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
+import { JwtRefreshGuard } from 'src/authentication/jwt-refresh.guard';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -46,17 +46,37 @@ export class UsersResolver {
     @Context() context: { response: Response }
   ) {
     const user = await this.authenticationService.validateUser(email, password)
+
     const jwtCookie = this.authenticationService.getJwtCookie(user)
-    context.response.setHeader('Set-Cookie', jwtCookie)
+    const { token: jwtRefreshToken, cookie: jwtRefreshCookie } = this.authenticationService.getJwtRefreshCookie(user)
+    context.response.setHeader('Set-Cookie', [jwtCookie, jwtRefreshCookie])
+
+    await this.usersService.setRefreshToken(jwtRefreshToken, user.id)
+
     return user
   }
 
   @Mutation(() => Boolean)
   async logout(
+    @CurrentUser() currentUser: TUser,
     @Context() context: { response: Response }
   ) {
-    const logoutCookie = this.authenticationService.getLogoutCookie()
-    context.response.setHeader('Set-Cookie', logoutCookie)
+    const logoutCookies = this.authenticationService.getLogoutCookies()
+    context.response.setHeader('Set-Cookie', logoutCookies)
+
+    await this.usersService.setRefreshToken(null, currentUser.id)
+
+    return true
+  }
+
+  @UseGuards(JwtRefreshGuard)
+  @Mutation(() => Boolean)
+  async refreshToken(
+    @CurrentUser() currentUser: TUser,
+    @Context() context: { response: Response }
+  ) {
+    const jwtCookie = this.authenticationService.getJwtCookie(currentUser)
+    context.response.setHeader('Set-Cookie', jwtCookie)
     return true
   }
 

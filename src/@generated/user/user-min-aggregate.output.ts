@@ -15,6 +15,9 @@ export class UserMinAggregate {
     password?: string;
 
     @Field(() => String, {nullable:true})
+    refreshToken?: string;
+
+    @Field(() => String, {nullable:true})
     name?: string;
 
     @Field(() => Date, {nullable:true})
