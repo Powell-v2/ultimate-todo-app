@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
+import { HideField } from '@nestjs/graphql';
 
 @InputType()
 export class UserUncheckedCreateWithoutTasksInput {
@@ -11,10 +12,10 @@ export class UserUncheckedCreateWithoutTasksInput {
     @Field(() => String, {nullable:false})
     email!: string;
 
-    @Field(() => String, {nullable:false})
+    @HideField()
     password!: string;
 
-    @Field(() => String, {nullable:true})
+    @HideField()
     refreshToken?: string;
 
     @Field(() => String, {nullable:false})

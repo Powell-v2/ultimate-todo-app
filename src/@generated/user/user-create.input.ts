@@ -1,5 +1,6 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
+import { HideField } from '@nestjs/graphql';
 import { TaskCreateNestedManyWithoutUserInput } from '../task/task-create-nested-many-without-user.input';
 
 @InputType()
@@ -8,10 +9,10 @@ export class UserCreateInput {
     @Field(() => String, {nullable:false})
     email!: string;
 
-    @Field(() => String, {nullable:false})
+    @HideField()
     password!: string;
 
-    @Field(() => String, {nullable:true})
+    @HideField()
     refreshToken?: string;
 
     @Field(() => String, {nullable:false})

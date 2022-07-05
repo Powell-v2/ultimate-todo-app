@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
+import { HideField } from '@nestjs/graphql';
 import { Task } from '../task/task.model';
 import { UserCount } from './user-count.output';
 
@@ -13,10 +14,10 @@ export class User {
     @Field(() => String, {nullable:false})
     email!: string;
 
-    @Field(() => String, {nullable:false})
+    @HideField()
     password!: string;
 
-    @Field(() => String, {nullable:true})
+    @HideField()
     refreshToken!: string | null;
 
     @Field(() => String, {nullable:false})

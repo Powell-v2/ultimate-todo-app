@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
+import { HideField } from '@nestjs/graphql';
 
 @ObjectType()
 export class UserMaxAggregate {
@@ -11,10 +12,10 @@ export class UserMaxAggregate {
     @Field(() => String, {nullable:true})
     email?: string;
 
-    @Field(() => String, {nullable:true})
+    @HideField()
     password?: string;
 
-    @Field(() => String, {nullable:true})
+    @HideField()
     refreshToken?: string;
 
     @Field(() => String, {nullable:true})

@@ -276,8 +276,6 @@ input UserOrderByWithRelationInput {
   email: SortOrder
   id: SortOrder
   name: SortOrder
-  password: SortOrder
-  refreshToken: SortOrder
   tasks: TaskOrderByRelationAggregateInput
   updatedAt: SortOrder
 }
@@ -305,8 +303,6 @@ input UserWhereInput {
   email: StringFilter
   id: IntFilter
   name: StringFilter
-  password: StringFilter
-  refreshToken: StringNullableFilter
   tasks: TaskListRelationFilter
   updatedAt: DateTimeFilter
 }

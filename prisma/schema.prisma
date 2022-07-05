@@ -18,7 +18,9 @@ generator nestgraphql {
 model User {
   id           Int      @id @default(autoincrement())
   email        String   @unique
+  /// @HideField({ input: true, output: true, match: ['UserScalarFieldEnum', '*'] })
   password     String
+  /// @HideField({ input: true, output: true, match: ['UserScalarFieldEnum', '*'] })
   refreshToken String?
   name         String
   tasks        Task[]
