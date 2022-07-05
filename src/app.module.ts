@@ -7,11 +7,13 @@ import {
 import { LoggerMiddleWare } from "./common/middleware/logger.middleware";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
+import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
 import { join } from "path";
-import { TasksModule } from "./tasks/tasks.module";
-import { UsersModule } from './users/users.module';
+
 import { AuthenticationModule } from './authentication/authentication.module';
 import { SubtasksModule } from './subtasks/subtasks.module';
+import { TasksModule } from "./tasks/tasks.module";
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
@@ -26,7 +28,9 @@ import { SubtasksModule } from './subtasks/subtasks.module';
       cors: {
         credentials: true,
         origin: true,
-      }
+      },
+      playground: false,
+      plugins: [ApolloServerPluginLandingPageLocalDefault]
     }),
     UsersModule,
     TasksModule,

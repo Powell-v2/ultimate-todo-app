@@ -7,6 +7,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as jwtConstants from '../common/constants/jwt'
 import { ITokenPayload } from './tokenPayload.interface';
 
+const isDevEnv = process.env.NODE_ENV === 'dev'
+
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -25,7 +27,7 @@ export class AuthenticationService {
   getJwtCookie(user: User) {
     const payload = { email: user.email, userId: user.id }
     const token = this.jwtService.sign(payload)
-    return `JWT=${token}; HttpOnly; Path=/; Max-Age=${parseInt(jwtConstants.EXPIRES_IN, 10)}`
+    return `JWT=${token}; HttpOnly; Secure; ${isDevEnv ? "SameSite=None" : ""}; Path=/; Max-Age=${parseInt(jwtConstants.EXPIRES_IN, 10)}`
   }
 
   getJwtRefreshCookie(user: User) {
@@ -36,7 +38,7 @@ export class AuthenticationService {
     })
     return {
       token,
-      cookie: `JWT_REFRESH=${token}; HttpOnly; Path=/; Max-Age=${parseInt(jwtConstants.REFRESH_EXPIRES_IN, 10)}`
+      cookie: `JWT_REFRESH=${token}; HttpOnly; Secure; Path=/; Max-Age=${parseInt(jwtConstants.REFRESH_EXPIRES_IN, 10)}`
     }
   }
 
