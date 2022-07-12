@@ -27,11 +27,13 @@ export class UsersResolver {
     private readonly prisma: PrismaService,
   ) { }
 
+  @Roles(Role.ADMIN)
   @Query(() => [User], { name: 'users' })
   findAll(@Args() args: FindManyUserArgs) {
     return this.usersService.findAll(args)
   }
 
+  @Roles(Role.ADMIN)
   @Query(() => User, { name: 'user' })
   async findOne(@Args('id') id: number, @CurrentUser() currentUser: User) {
     const user = await this.usersService.findOneById(id)
@@ -83,7 +85,7 @@ export class UsersResolver {
     return true
   }
 
-  @Public()
+  @Roles(Role.ADMIN)
   @Mutation(() => User)
   async createUser(@Args('payload') payload: CreateUserInput) {
     let newUser
@@ -111,6 +113,7 @@ export class UsersResolver {
     return newUser
   }
 
+  @Roles(Role.ADMIN)
   @Mutation(() => User)
   async updateUser(
     @Args('id') id: number,
@@ -123,6 +126,7 @@ export class UsersResolver {
     return updatedUser
   }
 
+  @Roles(Role.ADMIN)
   @Mutation(() => User)
   async removeUser(@Args('id') id: number) {
     const removedSuccessfully = await this.usersService.remove(id)
