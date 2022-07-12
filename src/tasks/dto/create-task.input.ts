@@ -1,6 +1,6 @@
 import { Field, InputType } from "@nestjs/graphql";
 import { IsOptional, Length } from "class-validator";
-import { Priorities } from "../entities/task.entity";
+import { Priority } from "../entities/task.entity";
 
 @InputType()
 export class CreateTaskInput {
@@ -10,6 +10,6 @@ export class CreateTaskInput {
   @IsOptional()
   description?: string;
   dueDate?: Date;
-  @Field({ defaultValue: Priorities.P4 })
-  priority?: Priorities;
+  @Field({ defaultValue: Priority.P4 })
+  priority?: Priority;
 }

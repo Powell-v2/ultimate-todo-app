@@ -2,16 +2,16 @@ import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
 import { Subtask } from "src/subtasks/entities/subtask.entity";
 import { User } from "src/users/entities/user.entity";
 
-export enum Priorities {
+export enum Priority {
   P1 = "P1",
   P2 = "P2",
   P3 = "P3",
   P4 = "P4"
 }
 
-registerEnumType(Priorities, {
-  name: 'Priorities', description: 'Task priority levels.', valuesMap: {
-    [Priorities.P4]: {
+registerEnumType(Priority, {
+  name: 'Priority', description: 'Task priority levels.', valuesMap: {
+    [Priority.P4]: {
       description: 'Default priority level.'
     }
   }
@@ -27,8 +27,8 @@ export class Task {
   @Field(type => User)
   user: User
 
-  @Field(type => Priorities)
-  priority?: Priorities
+  @Field(type => Priority)
+  priority?: Priority
 
   @Field(type => [Subtask], { nullable: true })
   subtasks?: Subtask[]

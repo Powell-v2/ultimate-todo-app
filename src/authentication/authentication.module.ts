@@ -9,6 +9,7 @@ import { JwtAuthenticationGuard } from './jwt-authentication.guard';
 import { JwtStrategy } from './jwt.strategy';
 import { JwtRefreshStrategy } from './jwt-refresh.strategy';
 import * as jwtConstants from '../common/constants/jwt';
+import { RolesGuard } from 'src/common/guards/roles.guard';
 
 @Module({
   imports: [
@@ -21,10 +22,19 @@ import * as jwtConstants from '../common/constants/jwt';
       }
     })
   ],
-  providers: [AuthenticationService, JwtStrategy, JwtRefreshStrategy, {
-    provide: APP_GUARD,
-    useClass: JwtAuthenticationGuard,
-  }],
+  providers: [
+    AuthenticationService,
+    JwtStrategy,
+    JwtRefreshStrategy,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthenticationGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard
+    }
+  ],
   exports: [AuthenticationService],
 })
 

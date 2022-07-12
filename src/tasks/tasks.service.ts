@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import { FindManyTaskArgs } from "src/@generated/task/find-many-task.args";
 import { PrismaService } from "src/prisma.service";
 import { CreateTaskInput } from "./dto/create-task.input";
-import { Priorities } from "./entities/task.entity";
+import { Priority } from "./entities/task.entity";
 
 @Injectable()
 export class TasksService {
@@ -21,7 +21,7 @@ export class TasksService {
     return this.prisma.task.create({
       data: {
         ...data,
-        priority: data.priority || Priorities.P4,
+        priority: data.priority || Priority.P4,
         user: {
           connect: {
             id: userId

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { FindManySubtaskArgs } from 'src/@generated/subtask/find-many-subtask.args';
 import { PrismaService } from 'src/prisma.service';
-import { Priorities } from 'src/tasks/entities/task.entity';
+import { Priority } from 'src/tasks/entities/task.entity';
 import { CreateSubtaskInput } from './dto/create-subtask.input';
 import { UpdateSubaskInput } from './dto/update-subtask.input';
 
@@ -17,7 +17,7 @@ export class SubtasksService {
     return this.prisma.subtask.create({
       data: {
         ...data,
-        priority: data.priority || Priorities.P4,
+        priority: data.priority || Priority.P4,
         task: {
           connect: {
             id: taskId

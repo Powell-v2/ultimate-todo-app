@@ -7,7 +7,7 @@ import { Task } from 'src/tasks/entities/task.entity';
 import { FindManyUserArgs } from 'src/@generated/user/find-many-user.args';
 
 import { UsersService } from './users.service';
-import { User } from './entities/user.entity';
+import { Role, User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { AuthenticationService } from 'src/authentication/authentication.service';
@@ -15,6 +15,8 @@ import { Response } from 'express';
 import { Public } from 'src/common/decorators/public.decorator';
 import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 import { JwtRefreshGuard } from 'src/authentication/jwt-refresh.guard';
+import { Roles } from 'src/common/decorators/roles.decorator';
+import { PrismaService } from 'src/prisma.service';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -22,15 +24,16 @@ export class UsersResolver {
     private readonly usersService: UsersService,
     private readonly tasksService: TasksService,
     private readonly authenticationService: AuthenticationService,
+    private readonly prisma: PrismaService,
   ) { }
 
   @Query(() => [User], { name: 'users' })
   findAll(@Args() args: FindManyUserArgs) {
-    return this.usersService.findAll(args);
+    return this.usersService.findAll(args)
   }
 
   @Query(() => User, { name: 'user' })
-  async findOne(@Args('id') id: number, @CurrentUser() currentUser) {
+  async findOne(@Args('id') id: number, @CurrentUser() currentUser: User) {
     const user = await this.usersService.findOneById(id)
     if (!user) {
       throw new NotFoundException(`User with ID ${id} doesn't exist.`)
@@ -85,8 +88,17 @@ export class UsersResolver {
   async createUser(@Args('payload') payload: CreateUserInput) {
     let newUser
     const hashedPassword = await bcrypt.hash(payload.password, 10)
+
     try {
-      const { password, ...rest } = await this.usersService.create({ ...payload, password: hashedPassword })
+      const { password, ...rest } = await this.usersService.create({
+        ...payload,
+        password: hashedPassword,
+        roles: {
+          connect: payload.roles
+            ? payload.roles.map((role) => ({ name: role }))
+            : { name: Role.USER }
+        }
+      })
       newUser = rest
     } catch (error) {
       if (error instanceof Prisma.PrismaClientKnownRequestError) {
@@ -129,5 +141,22 @@ export class UsersResolver {
         }
       }
     })
+  }
+
+  @ResolveField('roles', () => [Role])
+  async getRoles(@Parent() user: User) {
+    const roles = await this.prisma.role.findMany({
+      where: {
+        User: {
+          some: {
+            id: {
+              equals: user.id
+            }
+          }
+        }
+      }
+    })
+
+    return roles.map(({ name }) => name)
   }
 }

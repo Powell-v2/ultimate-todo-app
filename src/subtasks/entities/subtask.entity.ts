@@ -1,5 +1,5 @@
 import { Field, ID, ObjectType } from "@nestjs/graphql";
-import { Priorities } from "src/tasks/entities/task.entity";
+import { Priority } from "src/tasks/entities/task.entity";
 
 @ObjectType({ description: "subtask" })
 export class Subtask {
@@ -11,8 +11,8 @@ export class Subtask {
 
   description?: string
 
-  @Field(type => Priorities)
-  priority?: Priorities
+  @Field(type => Priority)
+  priority?: Priority
 
   dueDate?: Date
 

@@ -4,8 +4,9 @@ import { IntFilter } from '../prisma/int-filter.input';
 import { StringFilter } from '../prisma/string-filter.input';
 import { HideField } from '@nestjs/graphql';
 import { StringNullableFilter } from '../prisma/string-nullable-filter.input';
-import { TaskListRelationFilter } from '../task/task-list-relation-filter.input';
+import { RoleListRelationFilter } from '../role/role-list-relation-filter.input';
 import { DateTimeFilter } from '../prisma/date-time-filter.input';
+import { TaskListRelationFilter } from '../task/task-list-relation-filter.input';
 
 @InputType()
 export class UserWhereInput {
@@ -34,12 +35,15 @@ export class UserWhereInput {
     @Field(() => StringFilter, {nullable:true})
     name?: StringFilter;
 
-    @Field(() => TaskListRelationFilter, {nullable:true})
-    tasks?: TaskListRelationFilter;
+    @Field(() => RoleListRelationFilter, {nullable:true})
+    roles?: RoleListRelationFilter;
 
     @Field(() => DateTimeFilter, {nullable:true})
     createdAt?: DateTimeFilter;
 
     @Field(() => DateTimeFilter, {nullable:true})
     updatedAt?: DateTimeFilter;
+
+    @Field(() => TaskListRelationFilter, {nullable:true})
+    tasks?: TaskListRelationFilter;
 }

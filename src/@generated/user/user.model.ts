@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { ObjectType } from '@nestjs/graphql';
 import { ID } from '@nestjs/graphql';
 import { HideField } from '@nestjs/graphql';
+import { Role } from '../role/role.model';
 import { Task } from '../task/task.model';
 import { UserCount } from './user-count.output';
 
@@ -23,14 +24,17 @@ export class User {
     @Field(() => String, {nullable:false})
     name!: string;
 
-    @Field(() => [Task], {nullable:true})
-    tasks?: Array<Task>;
+    @Field(() => [Role], {nullable:true})
+    roles?: Array<Role>;
 
     @Field(() => Date, {nullable:false})
     createdAt!: Date;
 
     @Field(() => Date, {nullable:false})
     updatedAt!: Date;
+
+    @Field(() => [Task], {nullable:true})
+    tasks?: Array<Task>;
 
     @Field(() => UserCount, {nullable:false})
     _count?: UserCount;

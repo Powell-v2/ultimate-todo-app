@@ -20,6 +20,7 @@ input CreateUserInput {
   email: String!
   name: String!
   password: String!
+  roles: [Role!]
 }
 
 """
@@ -137,7 +138,7 @@ input NestedStringNullableFilter {
 }
 
 """Task priority levels."""
-enum Priorities {
+enum Priority {
   P1
   P2
   P3
@@ -156,6 +157,34 @@ type Query {
 enum QueryMode {
   default
   insensitive
+}
+
+"""User access roles."""
+enum Role {
+  ADMIN
+
+  """Default role."""
+  USER
+}
+
+input RoleListRelationFilter {
+  every: RoleWhereInput
+  none: RoleWhereInput
+  some: RoleWhereInput
+}
+
+input RoleOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input RoleWhereInput {
+  AND: [RoleWhereInput!]
+  NOT: [RoleWhereInput!]
+  OR: [RoleWhereInput!]
+  User: UserListRelationFilter
+  createdAt: DateTimeFilter
+  name: StringFilter
+  updatedAt: DateTimeFilter
 }
 
 enum SortOrder {
@@ -203,7 +232,7 @@ type Subtask {
   description: String
   dueDate: DateTime
   id: ID!
-  priority: Priorities
+  priority: Priority
   title: String!
 }
 
@@ -238,7 +267,7 @@ type Task {
   description: String
   dueDate: DateTime
   id: ID!
-  priority: Priorities
+  priority: Priority
   subtasks: [Subtask!]!
   title: String!
   user: User!
@@ -320,6 +349,7 @@ input UpdateTaskInput {
 input UpdateUserInput {
   email: String
   name: String
+  roles: [Role!]
 }
 
 type User {
@@ -327,7 +357,14 @@ type User {
   email: String!
   id: ID!
   name: String!
+  roles: [Role!]!
   tasks: [Task!]!
+}
+
+input UserListRelationFilter {
+  every: UserWhereInput
+  none: UserWhereInput
+  some: UserWhereInput
 }
 
 input UserOrderByWithRelationInput {
@@ -335,6 +372,7 @@ input UserOrderByWithRelationInput {
   email: SortOrder
   id: SortOrder
   name: SortOrder
+  roles: RoleOrderByRelationAggregateInput
   tasks: TaskOrderByRelationAggregateInput
   updatedAt: SortOrder
 }
@@ -362,6 +400,7 @@ input UserWhereInput {
   email: StringFilter
   id: IntFilter
   name: StringFilter
+  roles: RoleListRelationFilter
   tasks: TaskListRelationFilter
   updatedAt: DateTimeFilter
 }

@@ -6,14 +6,21 @@ import { UpdateUserInput } from './dto/update-user.input';
 
 @Injectable()
 export class UsersService {
-  constructor(private prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) { }
 
   findAll(args: Prisma.UserFindManyArgs) {
-    return this.prisma.user.findMany(args);
+    return this.prisma.user.findMany(args)
   }
 
   findOneById(id: number) {
-    return this.prisma.user.findUnique({ where: { id } });
+    return this.prisma.user.findUnique({
+      where: { id },
+
+    })
+  }
+
+  findOne(args: Prisma.UserFindUniqueArgs) {
+    return this.prisma.user.findUnique(args)
   }
 
   findOneByEmail(email: string) {
