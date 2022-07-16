@@ -1,5 +1,5 @@
 import * as bcrypt from 'bcrypt'
-import { NotFoundException, ConflictException, InternalServerErrorException, UseGuards } from '@nestjs/common';
+import { NotFoundException, ConflictException, InternalServerErrorException, UseGuards, ForbiddenException } from '@nestjs/common';
 import { Resolver, Query, Mutation, Args, ResolveField, Parent, Context } from '@nestjs/graphql';
 import { Prisma, User as TUser } from '@prisma/client';
 import { TasksService } from 'src/tasks/tasks.service';
@@ -33,9 +33,12 @@ export class UsersResolver {
     return this.usersService.findAll(args)
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @Query(() => User, { name: 'user' })
   async findOne(@Args('id') id: number, @CurrentUser() currentUser: User) {
+    if (id !== currentUser.id) {
+      throw new ForbiddenException('You are not allowed to access this resource.')
+    }
     const user = await this.usersService.findOneById(id)
     if (!user) {
       throw new NotFoundException(`User with ID ${id} doesn't exist.`)

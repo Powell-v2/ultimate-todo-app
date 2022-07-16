@@ -30,7 +30,11 @@ import { UsersModule } from './users/users.module';
         origin: true,
       },
       playground: false,
-      plugins: [ApolloServerPluginLandingPageLocalDefault]
+      plugins: [ApolloServerPluginLandingPageLocalDefault],
+      // Execute enhancers at the field resolver level.
+      // WARNING: could cause performance issues.
+      // https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
+      // fieldResolverEnhancers: ['interceptors']
     }),
     UsersModule,
     TasksModule,
