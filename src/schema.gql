@@ -148,6 +148,7 @@ enum Priority {
 }
 
 type Query {
+  me: User!
   task(id: Int!): Task!
   tasks(cursor: TaskWhereUniqueInput, distinct: [TaskScalarFieldEnum!], orderBy: [TaskOrderByWithRelationInput!], skip: Int, take: Int, where: TaskWhereInput): [Task!]!
   user(id: Int!): User!

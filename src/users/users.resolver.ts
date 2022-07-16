@@ -46,6 +46,17 @@ export class UsersResolver {
     return user
   }
 
+  @Roles(Role.USER)
+  @Query(() => User, { name: 'me' })
+  async findCurrentUser(@CurrentUser() currentUser: User) {
+    const { id } = currentUser
+    const user = await this.usersService.findOneById(id)
+    if (!user) {
+      throw new NotFoundException(`User with ID ${id} doesn't exist.`)
+    }
+    return user
+  }
+
   @Public()
   @Mutation(() => User)
   async login(
