@@ -3,6 +3,7 @@ import { Reflector } from "@nestjs/core"
 import { GqlExecutionContext } from "@nestjs/graphql"
 import { Observable } from "rxjs"
 import { Role } from "src/users/entities/user.entity"
+import { IS_PUBLIC_FIELD } from "../decorators/public.decorator"
 import { ROLES_KEY } from "../decorators/roles.decorator"
 
 function matchRoles(userRoles: Role[], requiredRoles: Role[]) {
@@ -18,15 +19,19 @@ export class RolesGuard implements CanActivate {
   ): boolean | Promise<boolean> | Observable<boolean> {
     const context = GqlExecutionContext.create(gqlContext)
 
+    const isPublicField = this.reflector.getAllAndOverride(IS_PUBLIC_FIELD, [
+      gqlContext.getHandler(),
+      gqlContext.getClass(),
+    ])
+    if (isPublicField) return true
+
     const requiredRoles = this.reflector.getAllAndOverride<Role[]>(
       ROLES_KEY,
       [gqlContext.getHandler(), gqlContext.getClass()]
     )
-
-    if (!requiredRoles) return true
+    if (!requiredRoles) return false
 
     const { user } = context.getContext().request
-
     return matchRoles(user.roles, requiredRoles)
   }
 }
