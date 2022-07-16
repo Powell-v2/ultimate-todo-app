@@ -47,7 +47,7 @@ export class UsersResolver {
   }
 
   @Roles(Role.USER)
-  @Query(() => User, { name: 'me' })
+  @Query(() => User, { name: 'whoAmI' })
   async findCurrentUser(@CurrentUser() currentUser: User) {
     const { id } = currentUser
     const user = await this.usersService.findOneById(id)
@@ -129,12 +129,16 @@ export class UsersResolver {
     return newUser
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(Role.USER)
   @Mutation(() => User)
   async updateUser(
     @Args('id') id: number,
-    @Args('data') data: UpdateUserInput
+    @Args('data') data: UpdateUserInput,
+    @CurrentUser() currentUser: User
   ) {
+    if (id !== currentUser.id && !currentUser.roles.includes(Role.ADMIN)) {
+      throw new ForbiddenException('You are not allowed to edit this resource.')
+    }
     const updatedUser = await this.usersService.update({ id, data })
     if (!updatedUser) {
       throw new NotFoundException(`User with ID ${id} doesn't exist.`)
