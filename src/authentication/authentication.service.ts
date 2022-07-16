@@ -27,7 +27,7 @@ export class AuthenticationService {
   getJwtCookie(user: User) {
     const payload = { email: user.email, userId: user.id }
     const token = this.jwtService.sign(payload)
-    return `JWT=${token}; HttpOnly; Secure; ${isDevEnv ? "SameSite=None" : ""}; Path=/; Max-Age=${parseInt(jwtConstants.EXPIRES_IN, 10)}`
+    return `JWT=${token}; HttpOnly; Secure; ${isDevEnv ? "SameSite=None;" : ""} Path=/; Max-Age=${parseInt(jwtConstants.EXPIRES_IN, 10)}`
   }
 
   getJwtRefreshCookie(user: User) {
@@ -38,14 +38,14 @@ export class AuthenticationService {
     })
     return {
       token,
-      cookie: `JWT_REFRESH=${token}; HttpOnly; Secure; Path=/; Max-Age=${parseInt(jwtConstants.REFRESH_EXPIRES_IN, 10)}`
+      cookie: `JWT_REFRESH=${token}; HttpOnly; Secure; ${isDevEnv ? "SameSite=None;" : ""}; Path=/; Max-Age=${parseInt(jwtConstants.REFRESH_EXPIRES_IN, 10)}`
     }
   }
 
   getLogoutCookies() {
     return [
-      `JWT=; HttpOnly; Path=/; Max-Age=0`,
-      `JWT_REFRESH=; HttpOnly; Path=/; Max-Age=0`,
+      `JWT=; HttpOnly; Secure; ${isDevEnv ? "SameSite=None;" : ""} Path=/; Max-Age=0`,
+      `JWT_REFRESH=; HttpOnly; Secure; Path=/; Max-Age=0`,
     ]
   }
 }
