@@ -75,6 +75,7 @@ export class UsersResolver {
     return user
   }
 
+  @Roles(Role.USER)
   @Mutation(() => Boolean)
   async logout(
     @CurrentUser() currentUser: TUser,
@@ -88,6 +89,7 @@ export class UsersResolver {
     return true
   }
 
+  @Roles(Role.USER)
   @UseGuards(JwtRefreshGuard)
   @Mutation(() => Boolean)
   async refreshToken(
@@ -150,6 +152,7 @@ export class UsersResolver {
     return removedSuccessfully
   }
 
+  @Roles(Role.USER)
   @ResolveField('tasks', () => [Task])
   getTasks(@Parent() user: User) {
     return this.tasksService.findAll({
@@ -161,6 +164,7 @@ export class UsersResolver {
     })
   }
 
+  @Roles(Role.USER)
   @ResolveField('roles', () => [Role])
   async getRoles(@Parent() user: User) {
     const roles = await this.prisma.role.findMany({
