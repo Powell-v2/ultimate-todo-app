@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsEmail, IsNotEmpty, ArrayUnique, ArrayMinSize, ArrayMaxSize, IsOptional } from 'class-validator';
-import { Role } from '../entities/user.entity';
+import { ERole } from '../entities/user.entity';
 
 @InputType()
 export class CreateUserInput {
@@ -13,5 +13,5 @@ export class CreateUserInput {
   @ArrayUnique()
   @ArrayMinSize(1)
   @ArrayMaxSize(2)
-  roles?: Role[]
+  roles?: ERole[]
 }

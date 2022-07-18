@@ -7,7 +7,7 @@ import { Task } from 'src/tasks/entities/task.entity';
 import { FindManyUserArgs } from 'src/@generated/user/find-many-user.args';
 
 import { UsersService } from './users.service';
-import { Role, User } from './entities/user.entity';
+import { ERole, User } from './entities/user.entity';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { AuthenticationService } from 'src/authentication/authentication.service';
@@ -17,6 +17,7 @@ import { CurrentUser } from 'src/common/decorators/currentUser.decorator';
 import { JwtRefreshGuard } from 'src/authentication/jwt-refresh.guard';
 import { Roles } from 'src/common/decorators/roles.decorator';
 import { PrismaService } from 'src/prisma.service';
+import { TCurrentUser } from 'src/authentication/jwt.strategy';
 
 @Resolver(of => User)
 export class UsersResolver {
@@ -27,32 +28,32 @@ export class UsersResolver {
     private readonly prisma: PrismaService,
   ) { }
 
-  @Roles(Role.ADMIN)
+  @Roles(ERole.ADMIN)
   @Query(() => [User], { name: 'users' })
   findAll(@Args() args: FindManyUserArgs) {
     return this.usersService.findAll(args)
   }
 
-  @Roles(Role.USER)
+  @Roles(ERole.USER)
   @Query(() => User, { name: 'user' })
-  async findOne(@Args('id') id: number, @CurrentUser() currentUser: User) {
+  async findOne(@Args('id') id: number, @CurrentUser() currentUser: TCurrentUser) {
     if (id !== currentUser.id) {
-      throw new ForbiddenException('You are not allowed to access this resource.')
+      throw new ForbiddenException(`You are not allowed to access user #${id}`)
     }
     const user = await this.usersService.findOneById(id)
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} doesn't exist.`)
+      throw new NotFoundException(`User #${id} doesn't exist.`)
     }
     return user
   }
 
-  @Roles(Role.USER)
+  @Roles(ERole.USER)
   @Query(() => User, { name: 'whoAmI' })
-  async findCurrentUser(@CurrentUser() currentUser: User) {
+  async findCurrentUser(@CurrentUser() currentUser: TCurrentUser) {
     const { id } = currentUser
     const user = await this.usersService.findOneById(id)
     if (!user) {
-      throw new NotFoundException(`User with ID ${id} doesn't exist.`)
+      throw new NotFoundException(`User #${id} doesn't exist.`)
     }
     return user
   }
@@ -75,10 +76,10 @@ export class UsersResolver {
     return user
   }
 
-  @Roles(Role.USER)
+  @Roles(ERole.USER)
   @Mutation(() => Boolean)
   async logout(
-    @CurrentUser() currentUser: TUser,
+    @CurrentUser() currentUser: TCurrentUser,
     @Context() context: { response: Response }
   ) {
     const logoutCookies = this.authenticationService.getLogoutCookies()
@@ -89,11 +90,11 @@ export class UsersResolver {
     return true
   }
 
-  @Roles(Role.USER)
+  @Roles(ERole.USER)
   @UseGuards(JwtRefreshGuard)
   @Mutation(() => Boolean)
   async refreshToken(
-    @CurrentUser() currentUser: TUser,
+    @CurrentUser() currentUser: TCurrentUser,
     @Context() context: { response: Response }
   ) {
     const jwtCookie = this.authenticationService.getJwtCookie(currentUser)
@@ -101,7 +102,7 @@ export class UsersResolver {
     return true
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(ERole.ADMIN)
   @Mutation(() => User)
   async createUser(@Args('payload') payload: CreateUserInput) {
     let newUser
@@ -114,7 +115,7 @@ export class UsersResolver {
         roles: {
           connect: payload.roles
             ? payload.roles.map((role) => ({ name: role }))
-            : { name: Role.USER }
+            : { name: ERole.USER }
         }
       })
       newUser = rest
@@ -129,34 +130,34 @@ export class UsersResolver {
     return newUser
   }
 
-  @Roles(Role.USER)
+  @Roles(ERole.USER)
   @Mutation(() => User)
   async updateUser(
     @Args('id') id: number,
     @Args('data') data: UpdateUserInput,
-    @CurrentUser() currentUser: User
+    @CurrentUser() currentUser: TCurrentUser
   ) {
-    if (id !== currentUser.id && !currentUser.roles.includes(Role.ADMIN)) {
-      throw new ForbiddenException('You are not allowed to edit this resource.')
+    if (id !== currentUser.id && !currentUser.isAdmin) {
+      throw new ForbiddenException(`You are not allowed to edit user #${id}.`)
     }
     const updatedUser = await this.usersService.update({ id, data })
     if (!updatedUser) {
-      throw new NotFoundException(`User with ID ${id} doesn't exist.`)
+      throw new NotFoundException(`User #${id} doesn't exist.`)
     }
     return updatedUser
   }
 
-  @Roles(Role.ADMIN)
+  @Roles(ERole.ADMIN)
   @Mutation(() => User)
   async removeUser(@Args('id') id: number) {
     const removedSuccessfully = await this.usersService.remove(id)
     if (!removedSuccessfully) {
-      throw new NotFoundException(`User with ID ${id} doesn't exist.`)
+      throw new NotFoundException(`User #${id} doesn't exist.`)
     }
     return removedSuccessfully
   }
 
-  @Roles(Role.USER)
+  @Roles(ERole.USER)
   @ResolveField('tasks', () => [Task])
   getTasks(@Parent() user: User) {
     return this.tasksService.findAll({
@@ -168,8 +169,8 @@ export class UsersResolver {
     })
   }
 
-  @Roles(Role.USER)
-  @ResolveField('roles', () => [Role])
+  @Roles(ERole.USER)
+  @ResolveField('roles', () => [ERole])
   async getRoles(@Parent() user: User) {
     const roles = await this.prisma.role.findMany({
       where: {

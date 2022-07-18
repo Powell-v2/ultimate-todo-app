@@ -1,6 +1,5 @@
 import { Injectable } from "@nestjs/common";
 import { Prisma } from "@prisma/client";
-import { FindManyTaskArgs } from "src/@generated/task/find-many-task.args";
 import { PrismaService } from "src/prisma.service";
 import { CreateTaskInput } from "./dto/create-task.input";
 import { Priority } from "./entities/task.entity";
@@ -9,11 +8,15 @@ import { Priority } from "./entities/task.entity";
 export class TasksService {
   constructor(private prisma: PrismaService) { }
 
-  async findAll(args: FindManyTaskArgs) {
+  async findAll(args: Prisma.TaskFindManyArgs) {
     return this.prisma.task.findMany(args)
   }
 
-  async findOne(id: number) {
+  async findOne(args: Prisma.TaskFindUniqueArgs) {
+    return this.prisma.task.findUnique(args)
+  }
+
+  async findOneById(id: number) {
     return this.prisma.task.findUnique({ where: { id } })
   }
 

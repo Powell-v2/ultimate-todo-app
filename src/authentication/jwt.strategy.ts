@@ -1,12 +1,19 @@
+import { User as TUser } from "@prisma/client";
 import { Injectable } from "@nestjs/common";
 import { PassportStrategy } from "@nestjs/passport";
-import { User, Role } from "@prisma/client";
+import { User, Role as TRole } from "@prisma/client";
 import { Request } from "express";
 import { ExtractJwt, Strategy } from "passport-jwt";
+import { ERole } from "src/users/entities/user.entity";
 import { UsersService } from "src/users/users.service";
 
 import * as jwtConstants from '../common/constants/jwt';
 import { ITokenPayload } from "./tokenPayload.interface";
+
+export type TCurrentUser = TUser & {
+  roles: ERole[],
+  isAdmin: boolean
+}
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -21,17 +28,19 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     })
   }
 
-  async validate(payload: ITokenPayload) {
+  async validate(payload: ITokenPayload): Promise<TCurrentUser> {
     const user = await this.usersService.findOne({
       where: { id: payload.userId },
       include: {
         roles: true
       }
-    }) as User & { roles: { name: Role }[] }
+    }) as User & { roles: TRole[] }
+    const roles = user.roles.map(({ name }) => name) as ERole[]
 
     return {
       ...user,
-      roles: user.roles.map(({ name }) => name)
+      roles,
+      isAdmin: roles.includes(ERole.ADMIN)
     }
   }
 }

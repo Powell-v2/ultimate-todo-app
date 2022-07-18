@@ -1,14 +1,14 @@
 import { ObjectType, Field, ID, registerEnumType } from '@nestjs/graphql';
 import { Task } from 'src/tasks/entities/task.entity';
 
-export enum Role {
+export enum ERole {
   USER = "USER",
   ADMIN = "ADMIN"
 }
 
-registerEnumType(Role, {
+registerEnumType(ERole, {
   name: 'Role', description: 'User access roles.', valuesMap: {
-    [Role.USER]: {
+    [ERole.USER]: {
       description: 'Default role.'
     }
   }
@@ -20,8 +20,8 @@ export class User {
   id: number;
   name: string;
   email: string;
-  @Field(type => [Role])
-  roles: Role[]
+  @Field(type => [ERole])
+  roles: ERole[]
   createdAt: Date;
   tasks?: Task[];
 }

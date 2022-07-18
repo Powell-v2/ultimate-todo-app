@@ -2,11 +2,11 @@ import { CanActivate, Injectable } from "@nestjs/common"
 import { Reflector } from "@nestjs/core"
 import { GqlExecutionContext } from "@nestjs/graphql"
 import { Observable } from "rxjs"
-import { Role } from "src/users/entities/user.entity"
+import { ERole } from "src/users/entities/user.entity"
 import { IS_PUBLIC_FIELD } from "../decorators/public.decorator"
 import { ROLES_KEY } from "../decorators/roles.decorator"
 
-function matchRoles(userRoles: Role[], requiredRoles: Role[]) {
+function matchRoles(userRoles: ERole[], requiredRoles: ERole[]) {
   return requiredRoles.every((requiredRole) => userRoles.find((role) => role === requiredRole))
 }
 
@@ -25,7 +25,7 @@ export class RolesGuard implements CanActivate {
     ])
     if (isPublicField) return true
 
-    const requiredRoles = this.reflector.getAllAndOverride<Role[]>(
+    const requiredRoles = this.reflector.getAllAndOverride<ERole[]>(
       ROLES_KEY,
       [gqlContext.getHandler(), gqlContext.getClass()]
     )
