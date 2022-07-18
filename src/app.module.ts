@@ -21,6 +21,7 @@ import { UsersModule } from './users/users.module';
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), "src/schema.gql"),
       sortSchema: true,
+      csrfPrevention: true,
       transformSchema: (schema) => {
         // Apply transformations, such as middleware (graphql-shield)
         // or custom directives.
