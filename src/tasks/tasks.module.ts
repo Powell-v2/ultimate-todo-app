@@ -8,6 +8,6 @@ import { TasksService } from "./tasks.service";
 @Module({
   providers: [TasksResolver, TasksService, PrismaService],
   exports: [TasksService],
-  imports: [forwardRef(() => UsersModule), SubtasksModule],
+  imports: [forwardRef(() => UsersModule), forwardRef(() => SubtasksModule)],
 })
 export class TasksModule { }
