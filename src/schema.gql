@@ -2,6 +2,38 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+"""attachment"""
+type Attachment {
+  createdAt: DateTime!
+  id: ID!
+  s3Key: String!
+}
+
+input AttachmentListRelationFilter {
+  every: AttachmentWhereInput
+  none: AttachmentWhereInput
+  some: AttachmentWhereInput
+}
+
+input AttachmentOrderByRelationAggregateInput {
+  _count: SortOrder
+}
+
+input AttachmentWhereInput {
+  AND: [AttachmentWhereInput!]
+  NOT: [AttachmentWhereInput!]
+  OR: [AttachmentWhereInput!]
+  createdAt: DateTimeFilter
+  id: IntFilter
+  s3Key: StringFilter
+  task: TaskRelationFilter
+  taskId: IntFilter
+}
+
+input CreateAttachmentInput {
+  s3Key: String!
+}
+
 input CreateSubtaskInput {
   description: String
   dueDate: DateTime
@@ -62,11 +94,19 @@ input IntFilter {
 }
 
 type Mutation {
+  addAttachment(data: CreateAttachmentInput!, taskId: Int!): Attachment!
   addSubtask(data: CreateSubtaskInput!, taskId: Int!): Subtask!
   addTask(data: CreateTaskInput!, userId: Int!): Task!
   createUser(payload: CreateUserInput!): User!
+  deleteAttachment(id: Int!): Boolean!
   deleteSubtask(id: Int!): Boolean!
   deleteTask(id: Int!): Boolean!
+
+  """Generate signed URL for obtaining attachment from S3 bucket"""
+  getTaskAttachmentUrls(taskId: Int!): [String!]!
+
+  """Generate signed URL for uploading to S3 bucket"""
+  getUrlForTaskAttachmentUpload(fileName: String!, taskId: Int!): String!
   login(email: String!, password: String!): User!
   logout: Boolean!
   refreshToken: Boolean!
@@ -264,6 +304,7 @@ input SubtaskWhereInput {
 
 """task"""
 type Task {
+  attachments: [Attachment!]!
   createdAt: DateTime!
   description: String
   dueDate: DateTime
@@ -285,6 +326,7 @@ input TaskOrderByRelationAggregateInput {
 }
 
 input TaskOrderByWithRelationInput {
+  attachments: AttachmentOrderByRelationAggregateInput
   createdAt: SortOrder
   description: SortOrder
   dueDate: SortOrder
@@ -317,6 +359,7 @@ input TaskWhereInput {
   AND: [TaskWhereInput!]
   NOT: [TaskWhereInput!]
   OR: [TaskWhereInput!]
+  attachments: AttachmentListRelationFilter
   createdAt: DateTimeFilter
   description: StringNullableFilter
   dueDate: DateTimeNullableFilter

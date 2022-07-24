@@ -1,4 +1,5 @@
 import { Field, ID, ObjectType, registerEnumType } from "@nestjs/graphql";
+import { Attachment } from "src/attachments/entities/attachment.entity";
 import { Subtask } from "src/subtasks/entities/subtask.entity";
 import { User } from "src/users/entities/user.entity";
 
@@ -19,13 +20,18 @@ registerEnumType(Priority, {
 
 @ObjectType({ description: "task" })
 export class Task {
-  @Field((type) => ID)
+  @Field(type => ID)
   id: number
 
   title: string
 
   @Field(type => User)
   user: User
+
+  createdAt: Date
+
+  @Field(type => [Attachment])
+  attachments?: Attachment[]
 
   @Field(type => Priority)
   priority?: Priority
@@ -37,6 +43,5 @@ export class Task {
 
   dueDate?: Date
 
-  createdAt: Date
 }
 

@@ -1,7 +1,7 @@
 import { ForbiddenException, NotFoundException, ParseIntPipe } from '@nestjs/common'
 import { Resolver, Query, Args, Mutation, Subscription, ResolveField, Parent } from '@nestjs/graphql'
 import { PubSub } from 'graphql-subscriptions'
-import { Task as TTask } from "@prisma/client"
+import * as PrismaClient from "@prisma/client"
 
 import { FindManyTaskArgs } from 'src/@generated/task/find-many-task.args'
 import { TCurrentUser } from 'src/authentication/jwt.strategy'
@@ -16,6 +16,8 @@ import { CreateTaskInput } from './dto/create-task.input'
 import { UpdateTaskInput } from './dto/update-task.input'
 import { Task } from './entities/task.entity'
 import { TasksService } from './tasks.service'
+import { Attachment } from 'src/attachments/entities/attachment.entity'
+import { AttachmentsService } from 'src/attachments/attachments.service'
 
 const pubsub = new PubSub()
 
@@ -25,6 +27,7 @@ export class TasksResolver {
     private readonly tasksService: TasksService,
     private readonly usersService: UsersService,
     private readonly subtasksService: SubtasksService,
+    private readonly attachmentsService: AttachmentsService,
   ) { }
 
   @Roles(ERole.USER)
@@ -52,21 +55,30 @@ export class TasksResolver {
       ...args,
       where: {
         ...args.where,
-        userId: { equals: currentUser.id }
+        userId: currentUser.id
       }
     })
   }
 
   @ResolveField('user', () => User)
-  getTaskOwner(@Parent() task: TTask) {
+  getTaskOwner(@Parent() task: PrismaClient.Task) {
     return this.usersService.findOneById(task.userId)
   }
 
   @ResolveField('subtasks', () => [Subtask])
-  getSubtasks(@Parent() task: TTask) {
+  getSubtasks(@Parent() task: PrismaClient.Task) {
     return this.subtasksService.findAll({
       where: {
-        taskId: { equals: task.id }
+        taskId: task.id
+      }
+    })
+  }
+
+  @ResolveField('attachments', () => [Attachment])
+  getAttachments(@Parent() task: PrismaClient.Task) {
+    return this.attachmentsService.findAll({
+      where: {
+        taskId: task.id
       }
     })
   }

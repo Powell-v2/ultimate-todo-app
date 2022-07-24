@@ -7,4 +7,7 @@ export class TaskCount {
 
     @Field(() => Int, {nullable:false})
     subtasks?: number;
+
+    @Field(() => Int, {nullable:false})
+    attachments?: number;
 }

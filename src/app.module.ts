@@ -4,7 +4,7 @@ import {
   NestModule,
   RequestMethod,
 } from "@nestjs/common";
-import { LoggerMiddleWare } from "./common/middleware/logger.middleware";
+import { SNSMiddleware } from "./common/middleware/sns.middleware";
 import { GraphQLModule } from "@nestjs/graphql";
 import { ApolloDriver, ApolloDriverConfig } from "@nestjs/apollo";
 import { ApolloServerPluginLandingPageLocalDefault } from "apollo-server-core";
@@ -14,6 +14,8 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { SubtasksModule } from './subtasks/subtasks.module';
 import { TasksModule } from "./tasks/tasks.module";
 import { UsersModule } from './users/users.module';
+import { AttachmentsModule } from "./attachments/attachments.module";
+import { FilesModule } from "./files/files.module";
 
 @Module({
   imports: [
@@ -42,17 +44,19 @@ import { UsersModule } from './users/users.module';
       // https://docs.nestjs.com/graphql/other-features#execute-enhancers-at-the-field-resolver-level
       // fieldResolverEnhancers: ['interceptors']
     }),
+    AuthenticationModule,
     UsersModule,
     TasksModule,
-    AuthenticationModule,
     SubtasksModule,
+    AttachmentsModule,
+    FilesModule,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(LoggerMiddleWare).forRoutes({
-      path: "*",
-      method: RequestMethod.HEAD,
+    consumer.apply(SNSMiddleware).forRoutes({
+      path: "/webhooks",
+      method: RequestMethod.POST,
     });
   }
 }

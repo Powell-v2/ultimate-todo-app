@@ -2,6 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { UserCreateNestedOneWithoutTasksInput } from '../user/user-create-nested-one-without-tasks.input';
 import { SubtaskCreateNestedManyWithoutTaskInput } from '../subtask/subtask-create-nested-many-without-task.input';
+import { AttachmentCreateNestedManyWithoutTaskInput } from '../attachment/attachment-create-nested-many-without-task.input';
 
 @InputType()
 export class TaskCreateInput {
@@ -29,4 +30,7 @@ export class TaskCreateInput {
 
     @Field(() => SubtaskCreateNestedManyWithoutTaskInput, {nullable:true})
     subtasks?: SubtaskCreateNestedManyWithoutTaskInput;
+
+    @Field(() => AttachmentCreateNestedManyWithoutTaskInput, {nullable:true})
+    attachments?: AttachmentCreateNestedManyWithoutTaskInput;
 }

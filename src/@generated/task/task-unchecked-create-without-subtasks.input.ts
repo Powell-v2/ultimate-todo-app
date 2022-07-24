@@ -1,6 +1,7 @@
 import { Field } from '@nestjs/graphql';
 import { InputType } from '@nestjs/graphql';
 import { Int } from '@nestjs/graphql';
+import { AttachmentUncheckedCreateNestedManyWithoutTaskInput } from '../attachment/attachment-unchecked-create-nested-many-without-task.input';
 
 @InputType()
 export class TaskUncheckedCreateWithoutSubtasksInput {
@@ -28,4 +29,7 @@ export class TaskUncheckedCreateWithoutSubtasksInput {
 
     @Field(() => Int, {nullable:false})
     userId!: number;
+
+    @Field(() => AttachmentUncheckedCreateNestedManyWithoutTaskInput, {nullable:true})
+    attachments?: AttachmentUncheckedCreateNestedManyWithoutTaskInput;
 }
